@@ -41,7 +41,7 @@ public class ImageTest {
 		for (int i = 0; i < x.length; i++) x[i] = new ComplexNumber(i, 0);
 		
 		ComplexNumber[] actuals = new Image().fft(x);
-		for (int i = 0; i < actuals.length; i++) System.out.println("actuals["+i+"]: " + actuals[i]);
+		for (int i = 0; i < actuals.length; i++) System.out.println("testFftRec(): actuals["+i+"]: " + actuals[i]);
 		
 		ComplexNumber[] expecteds = new ComplexNumber[8];
 		expecteds[0] = new ComplexNumber(28, 0);
@@ -78,6 +78,27 @@ public class ImageTest {
 		for (int i = 0; i < 10; i++) actuals[i] = img.idft(entrada, i, 0);
 		
 		assertArrayEquals(expecteds, actuals, 0.0000000001);
+	}
+	
+	@Test
+	public void testIFftRec() {
+		ComplexNumber[] entrada = new ComplexNumber[8]; 
+		entrada[0] = new ComplexNumber(28, 0);
+		entrada[1] = new ComplexNumber(-4, 9.6568542494923801952067548968387923142786875015077922927);
+		entrada[2] = new ComplexNumber(-4, 4);
+		entrada[3] = new ComplexNumber(-4, 1.6568542494923801952067548968387923142786875015077922927);
+		entrada[4] = new ComplexNumber(-4, 0);
+		entrada[5] = new ComplexNumber(-4, -1.6568542494923801952067548968387923142786875015077922927);
+		entrada[6] = new ComplexNumber(-4, -4);
+		entrada[7] = new ComplexNumber(-4, -9.6568542494923801952067548968387923142786875015077922927);
+		
+		ComplexNumber[] actuals = new Image().ifft(entrada);
+		for (int i = 0; i < actuals.length; i++) System.out.println("testIFftRec(): actuals["+i+"]: " + actuals[i]);
+		
+		ComplexNumber[] expecteds = new ComplexNumber[8];
+		for (int i = 0; i < expecteds.length; i++) expecteds[i] = new ComplexNumber(i, 0);
+		
+		assertArrayEquals(expecteds, actuals);
 	}
 
 }

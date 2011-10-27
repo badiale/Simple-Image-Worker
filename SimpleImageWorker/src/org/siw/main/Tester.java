@@ -54,7 +54,7 @@ public class Tester {
 	}
 	
 	public static void main(String[] args) {
-		Tester t = new Tester("testes/lena.pgm", "testes_out");
+		Tester t = new Tester("testes/lena.big.pgm", "testes_out");
 		
 		/*t.runTestCase(new String[] {});
 		t.runTestCase(new String[] {"-brilho", "10"});
@@ -71,8 +71,9 @@ public class Tester {
 		t.runTestCase(new String[] {"-LoG", "2"});
 		t.runTestCase(new String[] {"-LoG", "2", "-zero"});
 		t.runTestCase(new String[] {"-LoG", "3"});
-		t.runTestCase(new String[] {"-LoG", "3", "-zero"});*/
-		t.runTestCase(new String[] {"-dft"});
+		t.runTestCase(new String[] {"-LoG", "3", "-zero"});
+		t.runTestCase(new String[] {"-dft"}); */
+		t.runTestCase(new String[] {"-fft"});
 	}
 
 }

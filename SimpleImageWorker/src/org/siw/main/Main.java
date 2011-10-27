@@ -26,7 +26,8 @@ public class Main {
 			System.err.println("	-border				Para achar a borda, via laplace.");
 			System.err.println("	-LoG SIGMA			Para achar a borda, usando \"Laplacian of Gaussian\".");
 			System.err.println("	-zero				Efetua o zero crossing. Apenas util se aplicar o LoG primeiro.");
-			System.err.println("	-dft				Efetua o DFT.");
+			System.err.println("	-dft				Efetua a DFT (Evite utilizar com imagens muito grandes).");
+			System.err.println("	-fft				Efetua a FFT (Nao use imagens que nao tem tamanho potencia de 2).");
 			System.exit(1);
 		}
 
@@ -87,7 +88,8 @@ public class Main {
 			} else if (opcao.equals("-zero")) {
 				img.zeroCrossing();
 			} else if (opcao.equals("-dft")) {
-				//img.dft();
+				img.dft();
+			} else if (opcao.equals("-fft")) {
 				img.fft();
 			} else {
 				throw new Exception ("Opção inválida");

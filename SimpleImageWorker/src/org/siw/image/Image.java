@@ -342,27 +342,29 @@ public class Image {
 	public void dft() {
 		ComplexNumber[][] result = new ComplexNumber[this.height][this.width];
 		
-		System.out.println();
 		for (int v = 0; v < this.height; v++) {
-			System.out.printf("[%3d]\n", v);
 			for (int u = 0; u < this.width; u++) {
 				result[v][u] = dft(u,v);
 			}
 		}
 		
-		for (int y = 0; y < this.height; y++) {
-			System.out.printf("[%3d]\n", y);
-			for (int x = 0; x < this.width; x++) {
-				this.data[y][x].setAbsoluteColor((int) idft(result, x,y));
-			}
-		}
+		/*idft();*/
 		
-		/*// copy the result
+		// copy the result
 		for (int i = 0; i < this.height; i++) {
 			for (int j = 0; j < this.width; j++) {
 				this.data[i][j].setAbsoluteColor((int) result[i][j].abs());
 			}
-		}*/
+		}
+	}
+	
+	// calcula a inversa da DFT na imagem toda
+	public void idft(ComplexNumber[][] entrada) {
+		for (int y = 0; y < this.height; y++) {
+			for (int x = 0; x < this.width; x++) {
+				this.data[y][x].setAbsoluteColor((int) idft(entrada, x,y));
+			}
+		}
 	}
 	
 	// realiza a fft recursiva
@@ -373,7 +375,7 @@ public class Image {
 	//    else
 	//        X0,...,N/2−1 ← ditfft2(x, N/2, 2s)             DFT of (x0, x2s, x4s, ...)
 	//        XN/2,...,N−1 ← ditfft2(x+s, N/2, 2s)           DFT of (xs, xs+2s, xs+4s, ...)
-	//        for k = 0 to N/2−1                           combine DFTs of two halves into full DFT:
+	//        for k = 0 to N/2−1                             combine DFTs of two halves into full DFT:
 	//            t ← Xk
 	//            Xk ← t + exp(−2πi k/N) Xk+N/2
 	//            Xk+N/2 ← t − exp(−2πi k/N) Xk+N/2
@@ -388,58 +390,52 @@ public class Image {
 		} else {
 			ComplexNumber[] array = new ComplexNumber[N / 2];
 			
+			// FFT de numeros pares
 			for (int i = 0; i < N/2; i++) array[i] = new ComplexNumber(x[2*i]);
 			ComplexNumber[] par = fft(array);
 			
+			// FFT de numeros impares
 			for (int i = 0; i < N/2; i++) array[i] = new ComplexNumber(x[2*i + 1]);
 			ComplexNumber[] impar = fft(array);
 			
+			// soma os pares e impares na forma: PAR + IMPAR * exponencial
 			for (int k = 0; k < N / 2; k++) {
 				ComplexNumber twiddle = new ComplexNumber(0, -(2 * Math.PI * k) / N);
 				twiddle.exp();
 				twiddle.multiply(impar[k]);
+				
+				// se menor q N/2, soma
 				result[k] = ComplexNumber.add(par[k], twiddle);
+				
+				// se maior q N/2, subtrai
 				result[k+N/2] = ComplexNumber.subtract(par[k], twiddle);
 			}
 		}
 		
 		return result;
+	}
+	
+	// calcula a inversa da dft, de forma rapida
+	// http://www.eetimes.com/design/embedded/4210789/DSP-Tricks--Computing-inverse-FFTs-using-the-forward-FFT
+	public ComplexNumber[] ifft(ComplexNumber[] x) {
+		ComplexNumber[] result = new ComplexNumber[x.length];
 		
-		/*ComplexNumber z1, z2, z3, z4, tmp, cTwo;
-		int n = x.length;
-		int m = n / 2;
-		ComplexNumber[] result = new ComplexNumber[n];
-		ComplexNumber[] even = new ComplexNumber[m];
-		ComplexNumber[] odd = new ComplexNumber[m];
-		ComplexNumber[] sum = new ComplexNumber[m];
-		ComplexNumber[] diff = new ComplexNumber[m];
-		cTwo = new ComplexNumber(2, 0);
-		if (n == 1) {
-			result[0] = x[0];
-		} else {
-			z1 = new ComplexNumber(0.0, -2 * (Math.PI) / n);
-			tmp = ComplexNumber.exp(z1);
-			z1 = new ComplexNumber(1.0, 0.0);
-			for (int i = 0; i < m; ++i) {
-				z3 = ComplexNumber.add(x[i], x[i + m]);
-				sum[i] = ComplexNumber.divide(z3, cTwo);
-
-				z3 = ComplexNumber.subtract(x[i], x[i + m]);
-				z4 = ComplexNumber.multiply(z3, z1);
-				diff[i] = ComplexNumber.divide(z4, cTwo);
-
-				z2 = ComplexNumber.multiply(z1, tmp);
-				z1 = new ComplexNumber(z2);
-			}
-			even = fft(sum);
-			odd = fft(diff);
-
-			for (int i = 0; i < m; ++i) {
-				result[i * 2] = new ComplexNumber(even[i]);
-				result[i * 2 + 1] = new ComplexNumber(odd[i]);
-			}
+		// conjuga todos os numeros da entrada
+		for (int i = 0; i < result.length; i++) {
+			result[i] = new ComplexNumber(x[i]);
+			result[i].conjugate();
 		}
-		return result;*/
+
+		// aplica o fft
+		result = fft(result);
+		
+		// conjuga novamente e divide por N
+		for (ComplexNumber r : result) {
+			r.conjugate();
+			r.divide(x.length);
+		}
+				
+		return result;
 	}
 	
 	// aplica o fft recursivo
@@ -479,18 +475,53 @@ public class Image {
 			}
 		}
 		
-		for (int y = 0; y < this.height; y++) {
-			System.out.printf("[%3d]\n", y);
-			for (int x = 0; x < this.width; x++) {
-				this.data[y][x].setAbsoluteColor((int) idft(result, x,y));
+		// por fim, salva o resultado
+		for (int i = 0; i < this.height; i++) {
+			for (int j = 0; j < this.width; j++) {
+				this.data[i][j].setAbsoluteColor((int) result[i][j].abs());
 			}
 		}
 		
-//		// por fim, salva o resultado
-//		for (int i = 0; i < this.height; i++) {
-//			for (int j = 0; j < this.width; j++) {
-//				this.data[i][j].setAbsoluteColor((int) result[i][j].abs());
-//			}
-//		}
+//		ifft(result);
+	}
+	
+	// aplica o ifft recursivo
+	public void ifft (ComplexNumber[][] entrada) {
+		ComplexNumber[] array = null;
+		
+		// primeiro aplica a ifft nas colunas
+		for (int x = 0; x < width; x++) {
+			array = new ComplexNumber[height];
+			for (int y = 0; y < height; y++) {
+				array[y] = entrada[y][x];
+			}
+			
+			array = ifft(array);
+			
+			for (int y = 0; y < height; y++) {
+				entrada[y][x] = array[y];
+			}
+		}
+		
+		// segundo aplica a ifft nas linhas
+		for (int y = 0; y < height; y++) {
+			array = new ComplexNumber[width];
+			for (int x = 0; x < width; x++) {
+				array[x] = entrada[y][x];
+			}
+			
+			array = ifft(array);
+			
+			for (int x = 0; x < width; x++) {
+				entrada[y][x] = array[x];
+			}
+		}
+		
+		// por fim, salva o resultado
+		for (int i = 0; i < this.height; i++) {
+			for (int j = 0; j < this.width; j++) {
+				this.data[i][j].setAbsoluteColor((int) entrada[i][j].abs());
+			}
+		}
 	}
 }
