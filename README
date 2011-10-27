@@ -1,0 +1,9 @@
+Simple Image Worker
+
+Uma ferramenta meramente didática, sem muita utilidade prática.
+
+Esta ferramenta é desenvolvida como trabalho para a disciplina "Processamento de imagens".
+Ela contém a maioria dos elementos ensinados na disciplina, implementados em java, para facilitar uma leitura do código posteriormente.
+
+Apesar de não ser voltada para uso prático, é possível passar algumas opções, via linha de comando, para executar as funcionalidades da ferramenta.
+Para mais informações, rode o programa sem nenhum argumento, que ele irá retornar uma lista de possíveis comandos.
