@@ -108,7 +108,7 @@ public class ComplexNumber {
 	public boolean equals(Object obj) {
 		if (obj instanceof org.siw.util.ComplexNumber) {
 			ComplexNumber c2 = (ComplexNumber) obj;
-			double delta = 0.0000001;
+			double delta = 0.0000000001;
 			return (this.a - delta <= c2.a && this.a + delta >= c2.a) && (this.b -delta <= c2.b && this.b + delta >= c2.b);
 		} else {
 			return super.equals(obj);

@@ -303,11 +303,11 @@ public class Image {
 				double uxW = (double) x * uW;
 				double vyH = (double) y * vH;
 				
-				double exp = 2 * Math.PI * (uxW + vyH);
-				double color = (double) this.data[x][y].getColor();
+				double color = (double) this.data[y][x].getColor();
+				double exp = -2 * Math.PI * (uxW + vyH);
 				
 				real += color * Math.cos(exp);
-				imaginary += - color * Math.sin(exp);
+				imaginary += color * Math.sin(exp);
 			}
 		}
 		
@@ -316,8 +316,7 @@ public class Image {
 	
 	// calcula a inversa da transformada discreta de fourier no ponto (x, y)
 	public double idft(ComplexNumber[][] F, int x, int y) {
-		double real = 0;
-		double imaginary = 0;
+		ComplexNumber result = new ComplexNumber();
 		
 		double xW = (double) x / this.width;
 		double yH = (double) y / this.height;
@@ -327,17 +326,16 @@ public class Image {
 				double uxW = (double) u * xW;
 				double vyH = (double) v * yH;
 				
-				double exp = 2 * Math.PI * (uxW + vyH);
-				
-				real += F[v][u].getReal() * Math.cos(exp);
-				imaginary += F[v][u].getImaginary() * Math.sin(exp);
+				ComplexNumber exp = new ComplexNumber(0, 2 * Math.PI * (uxW + vyH));
+				exp.exp();
+				exp.multiply(F[v][u]);
+				result.add(exp);
 			}
 		}
 		double division = this.width * this.height;
-		real = real / division;
-		imaginary = imaginary / division;
+		result.divide(division);
 
-		return Math.sqrt(real*real + imaginary*imaginary);
+		return result.abs();
 	}
 	
 	// calcula o DFT da imagem toda
@@ -381,32 +379,33 @@ public class Image {
 	//            Xk+N/2 ← t − exp(−2πi k/N) Xk+N/2
 	//        endfor
 	//    endif
-	public ComplexNumber[] ditfft2(ComplexNumber[] x) {
-		/*int N = x.length;
+	public ComplexNumber[] fft(ComplexNumber[] x) {
+		int N = x.length;
 		ComplexNumber[] result = new ComplexNumber[N];
 		
 		if (N == 1) {
-			result[0] = x[0];
+			result[0] = new ComplexNumber(x[0]);
 		} else {
 			ComplexNumber[] array = new ComplexNumber[N / 2];
 			
 			for (int i = 0; i < N/2; i++) array[i] = new ComplexNumber(x[2*i]);
-			ComplexNumber[] par = ditfft2(array);
+			ComplexNumber[] par = fft(array);
 			
 			for (int i = 0; i < N/2; i++) array[i] = new ComplexNumber(x[2*i + 1]);
-			ComplexNumber[] impar = ditfft2(array);
+			ComplexNumber[] impar = fft(array);
 			
 			for (int k = 0; k < N / 2; k++) {
-				ComplexNumber twiddle = new ComplexNumber(0, -(2 * Math.PI * k) / N); twiddle.exp();
-				ComplexNumber num = ComplexNumber.multiply(twiddle, impar[k]);
-				result[k] = ComplexNumber.add(par[k], num);
-				result[k+N/2] = ComplexNumber.subtract(par[k], num);
+				ComplexNumber twiddle = new ComplexNumber(0, -(2 * Math.PI * k) / N);
+				twiddle.exp();
+				twiddle.multiply(impar[k]);
+				result[k] = ComplexNumber.add(par[k], twiddle);
+				result[k+N/2] = ComplexNumber.subtract(par[k], twiddle);
 			}
 		}
 		
-		return result;*/
+		return result;
 		
-		ComplexNumber z1, z2, z3, z4, tmp, cTwo;
+		/*ComplexNumber z1, z2, z3, z4, tmp, cTwo;
 		int n = x.length;
 		int m = n / 2;
 		ComplexNumber[] result = new ComplexNumber[n];
@@ -432,19 +431,19 @@ public class Image {
 				z2 = ComplexNumber.multiply(z1, tmp);
 				z1 = new ComplexNumber(z2);
 			}
-			even = ditfft2(sum);
-			odd = ditfft2(diff);
+			even = fft(sum);
+			odd = fft(diff);
 
 			for (int i = 0; i < m; ++i) {
 				result[i * 2] = new ComplexNumber(even[i]);
 				result[i * 2 + 1] = new ComplexNumber(odd[i]);
 			}
 		}
-		return result;
+		return result;*/
 	}
 	
 	// aplica o fft recursivo
-	public void ditfft2 () {
+	public void fft () {
 		ComplexNumber[][] result = new ComplexNumber[height][width];
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
@@ -459,7 +458,7 @@ public class Image {
 				array[y] = result[y][x];
 			}
 			
-			array = ditfft2(array);
+			array = fft(array);
 			
 			for (int y = 0; y < height; y++) {
 				result[y][x] = array[y];
@@ -473,7 +472,7 @@ public class Image {
 				array[x] = result[y][x];
 			}
 			
-			array = ditfft2(array);
+			array = fft(array);
 			
 			for (int x = 0; x < width; x++) {
 				result[y][x] = array[x];

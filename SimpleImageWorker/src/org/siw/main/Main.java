@@ -88,7 +88,7 @@ public class Main {
 				img.zeroCrossing();
 			} else if (opcao.equals("-dft")) {
 				//img.dft();
-				img.ditfft2();
+				img.fft();
 			} else {
 				throw new Exception ("Opção inválida");
 			}
