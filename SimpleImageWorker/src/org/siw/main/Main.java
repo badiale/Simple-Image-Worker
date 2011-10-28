@@ -28,6 +28,9 @@ public class Main {
 			System.err.println("	-zero				Efetua o zero crossing. Apenas util se aplicar o LoG primeiro.");
 			System.err.println("	-dft				Efetua a DFT (Evite utilizar com imagens muito grandes).");
 			System.err.println("	-fft				Efetua a FFT (Nao use imagens que nao tem tamanho potencia de 2).");
+			System.err.println("	-idft				Efetua a inversa da DFT (Evite utilizar com imagens muito grandes).");
+			System.err.println("	-ifft				Efetua a inversa da FFT (Nao use imagens que nao tem tamanho potencia de 2).");
+			System.err.println("	-fgauss SIGMA		Efetua o filtro de gauss para o espaco das frequencias.");
 			System.exit(1);
 		}
 
