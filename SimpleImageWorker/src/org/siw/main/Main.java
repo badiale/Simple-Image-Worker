@@ -91,8 +91,15 @@ public class Main {
 				img.dft();
 			} else if (opcao.equals("-fft")) {
 				img.fft();
+			} else if (opcao.equals("-idft")) {
+				img.idft();
+			} else if (opcao.equals("-ifft")) {
+				img.ifft();
+			} else if (opcao.equals("-fgauss")) {
+				double sigma = Double.parseDouble(args[++i]);
+				img.gaussFreq(sigma);
 			} else {
-				throw new Exception ("Opção inválida");
+				throw new Exception ("Opï¿½ï¿½o invï¿½lida");
 			}
 			i++;
 		}

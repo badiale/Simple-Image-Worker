@@ -1,8 +1,9 @@
 package org.siw.image;
 
-public class Pixel {
-	private int color;
+import org.siw.util.ComplexNumber;
 
+public class Pixel extends ComplexNumber {
+	
 	public Pixel () {
 		setAbsoluteColor(0);
 	}
@@ -11,17 +12,26 @@ public class Pixel {
 		setAbsoluteColor(color);
 	}
 
+	public Pixel(ComplexNumber z) {
+		super(z);
+	}
+
+	public Pixel(double a, double b) {
+		super(a, b);
+	}
+
 	public void setAbsoluteColor   (int color  ) { 
-		if (color < 0) this.color = 0;
-		else if (color > 255) this.color = 255;
+		if (getColor() < 0) setColor(0);
+		else if (getColor() > 255) setColor(255);
 		else setColor(color);
 	}
 	
 	public void setColor(int color) {
-		this.color = color;
+		this.setReal(color);
+		this.setImaginary(0);
 	}
 
-	public int getColor   () { return this.color  ; }
+	public int getColor   () { return (int) abs(); }
 
 	public void add(int color) { this.setAbsoluteColor(this.getColor() + color); }
 	

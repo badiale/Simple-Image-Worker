@@ -169,8 +169,8 @@ public class Image {
 		double sum = 0.0;
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				int x = (-size/2)+i;
-				int y = (-size/2)+j;
+				int x = (-size/2)+j;
+				int y = (-size/2)+i;
 				matrix[i][j] = Math.exp(-((x*x) + (y*y)) / (sqrSigma));
 				
 				sum += matrix[i][j];
@@ -212,7 +212,7 @@ public class Image {
 		Pixel[][] data = processFilter(matrix);
 		for (int i = 0; i < this.height; i++) {
 			for (int j = 0; j < this.width; j++) {
-				this.data[i][j].setColor(data[i][j].getColor());
+				this.data[i][j] = new Pixel(data[i][j]);
 			}
 		}
 	}
@@ -229,10 +229,10 @@ public class Image {
 		// procura por zero crossing
 		for (int i = 1; i < this.height - 1; i++) {
 			for (int j = 1; j < this.width - 1; j++) {
-				if ((data[i - 1][j - 1].getColor() < 0 && data[i + 1][j + 1].getColor() > 0) || (data[i - 1][j - 1].getColor() > 0 && data[i + 1][j + 1].getColor() < 0)) { newdata[i][j].setAbsoluteColor(255); }
-				else if ((data[i - 1][j + 1].getColor() < 0 && data[i + 1][j - 1].getColor() > 0) || (data[i - 1][j + 1].getColor() > 0 && data[i + 1][j - 1].getColor() < 0)) { newdata[i][j].setAbsoluteColor(255); }
-				else if ((data[i - 1][j + 0].getColor() < 0 && data[i + 1][j - 0].getColor() > 0) || (data[i - 1][j + 0].getColor() > 0 && data[i + 1][j - 0].getColor() < 0)) { newdata[i][j].setAbsoluteColor(255); }
-				else if ((data[i - 0][j - 1].getColor() < 0 && data[i + 0][j + 1].getColor() > 0) || (data[i - 0][j - 1].getColor() > 0 && data[i + 0][j + 1].getColor() < 0)) { newdata[i][j].setAbsoluteColor(255); }
+				if ((data[i - 1][j - 1].getReal() < 0 && data[i + 1][j + 1].getReal() > 0) || (data[i - 1][j - 1].getReal() > 0 && data[i + 1][j + 1].getReal() < 0)) { newdata[i][j].setAbsoluteColor(255); }
+				else if ((data[i - 1][j + 1].getReal() < 0 && data[i + 1][j - 1].getReal() > 0) || (data[i - 1][j + 1].getReal() > 0 && data[i + 1][j - 1].getReal() < 0)) { newdata[i][j].setAbsoluteColor(255); }
+				else if ((data[i - 1][j + 0].getReal() < 0 && data[i + 1][j - 0].getReal() > 0) || (data[i - 1][j + 0].getReal() > 0 && data[i + 1][j - 0].getReal() < 0)) { newdata[i][j].setAbsoluteColor(255); }
+				else if ((data[i - 0][j - 1].getReal() < 0 && data[i + 0][j + 1].getReal() > 0) || (data[i - 0][j - 1].getReal() > 0 && data[i + 0][j + 1].getReal() < 0)) { newdata[i][j].setAbsoluteColor(255); }
 			}
 		}
 		
@@ -348,21 +348,26 @@ public class Image {
 			}
 		}
 		
-		/*idft();*/
-		
 		// copy the result
 		for (int i = 0; i < this.height; i++) {
 			for (int j = 0; j < this.width; j++) {
-				this.data[i][j].setAbsoluteColor((int) result[i][j].abs());
+				this.data[i][j] = new Pixel(result[i][j]);
 			}
 		}
 	}
 	
 	// calcula a inversa da DFT na imagem toda
-	public void idft(ComplexNumber[][] entrada) {
+	public void idft() {
+		ComplexNumber[][] entrada = new ComplexNumber[this.height][this.width];
+		for (int i = 0; i < this.height; i++) {
+			for (int j = 0; j < this.width; j++) {
+				entrada[j][i] = new ComplexNumber(this.data[i][j]);
+			}
+		}
+		
 		for (int y = 0; y < this.height; y++) {
 			for (int x = 0; x < this.width; x++) {
-				this.data[y][x].setAbsoluteColor((int) idft(entrada, x,y));
+				this.data[y][x].setColor((int) idft(entrada, x,y));
 			}
 		}
 	}
@@ -440,11 +445,7 @@ public class Image {
 	
 	// aplica o fft recursivo
 	public void fft () {
-		ComplexNumber[][] result = new ComplexNumber[height][width];
-		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++)
-				result[y][x] = new ComplexNumber(this.data[y][x].getColor(), 0);
-		
+		Pixel[][] result = this.data;
 		ComplexNumber[] array = null;
 		
 		// primeiro aplica a fft nas colunas
@@ -457,7 +458,7 @@ public class Image {
 			array = fft(array);
 			
 			for (int y = 0; y < height; y++) {
-				result[y][x] = array[y];
+				result[y][x] = new Pixel(array[y]);
 			}
 		}
 		
@@ -471,22 +472,14 @@ public class Image {
 			array = fft(array);
 			
 			for (int x = 0; x < width; x++) {
-				result[y][x] = array[x];
+				result[y][x] = new Pixel(array[x]);
 			}
 		}
-		
-		// por fim, salva o resultado
-		for (int i = 0; i < this.height; i++) {
-			for (int j = 0; j < this.width; j++) {
-				this.data[i][j].setAbsoluteColor((int) result[i][j].abs());
-			}
-		}
-		
-//		ifft(result);
 	}
 	
 	// aplica o ifft recursivo
-	public void ifft (ComplexNumber[][] entrada) {
+	public void ifft () {
+		Pixel[][] entrada = this.data;
 		ComplexNumber[] array = null;
 		
 		// primeiro aplica a ifft nas colunas
@@ -499,7 +492,7 @@ public class Image {
 			array = ifft(array);
 			
 			for (int y = 0; y < height; y++) {
-				entrada[y][x] = array[y];
+				entrada[y][x] = new Pixel(array[y]);
 			}
 		}
 		
@@ -513,14 +506,42 @@ public class Image {
 			array = ifft(array);
 			
 			for (int x = 0; x < width; x++) {
-				entrada[y][x] = array[x];
+				entrada[y][x] = new Pixel(array[x]);
+			}
+		}
+	}
+	
+	// gauss no espaco da frequencia
+	public void gaussFreq (double sigma) {
+		double[][] matrix = new double[height][width];
+		
+		double sqrSigma = 2.0 * sigma*sigma;
+		
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				double x = j - width/2.0;
+				double y = i - height/2.0;
+				matrix[i][j] = Math.exp(-((x*x) + (y*y)) / (sqrSigma));
 			}
 		}
 		
-		// por fim, salva o resultado
-		for (int i = 0; i < this.height; i++) {
-			for (int j = 0; j < this.width; j++) {
-				this.data[i][j].setAbsoluteColor((int) entrada[i][j].abs());
+		// shifta
+		double[][] shifted = new double[height][width];
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				int y = (i + height / 2) % height;
+				int x = (j + width / 2) % width;
+				shifted[y][x] = matrix[i][j];
+			}
+		}
+		
+		convolute(shifted);
+	}
+
+	private void convolute(double[][] matrix) {
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				this.data[y][x].multiply(matrix[y][x]);
 			}
 		}
 	}
