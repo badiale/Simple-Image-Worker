@@ -86,6 +86,7 @@ public class Tester {
 		t.runTestCase(new String[] {"-fft"});
 		t.runTestCase(new String[] {"-fft", "-ifft"});
 		t.runTestCase(new String[] {"-fft", "-fgauss", "2", "-ifft"});
+		t.runTestCase(new String[] {"-fft", "-fgauss", "20"});
 		t.runTestCase(new String[] {"-fft", "-fgauss", "20", "-ifft"});
 		t.runTestCase(new String[] {"-fft", "-fgauss", "50", "-ifft"});
 	}
