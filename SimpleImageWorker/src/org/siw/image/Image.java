@@ -2,8 +2,6 @@ package org.siw.image;
 
 import java.util.Arrays;
 
-import javax.swing.text.html.MinimalHTMLWriter;
-
 import org.siw.util.ComplexNumber;
 
 public class Image {
@@ -33,10 +31,14 @@ public class Image {
 	public void setHeight (int  height) { this.height = height; }
 	public void setPixel (int x, int y, Pixel p) { data[x][y] = p; }
 	public void setData (Pixel[][] data) {
+		this.height = data.length;
+		this.width = data[0].length;
+		this.data = new Pixel[height][width];
+		
 		// apply the result
 		for (int i = 0; i < this.height; i++) {
 			for (int j = 0; j < this.width; j++) {
-				this.data[i][j].setAbsoluteColor(data[i][j].getColor());
+				this.data[i][j] = new Pixel(data[i][j]);
 			}
 		}
 	}
@@ -45,7 +47,6 @@ public class Image {
 	public int  getHeight () { return this.height; }
 	public Pixel getPixel (int x, int y) { return data[y][x]; }
 	public Pixel[][] getData () { return this.data; }
-	
 	
 	// salva as cores absolutas
 	public void absoluteColors() {

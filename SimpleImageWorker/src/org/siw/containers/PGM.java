@@ -20,7 +20,9 @@ public class PGM implements ImageContainer {
 		for (int y = 0; y < img.getHeight(); y++) {
 			for (int x = 0; x < img.getWidth(); x++) {
 				int color = img.getPixel(x,y).getColor();
-				out.write(color);
+				if (color > 255) out.write(255);
+				else if (color < 0) out.write(0);
+				else out.write(color);
 			}
 		}
 
@@ -73,7 +75,7 @@ public class PGM implements ImageContainer {
 		img = new Image(width, height);
 		for (int y = 0; y < img.getHeight(); y++) {
 			for (int x = 0; x < img.getWidth(); x++) {
-				img.getPixel(x, y).setAbsoluteColor(in.read());
+				img.getPixel(x, y).setColor(in.read());
 			}
 		}
 

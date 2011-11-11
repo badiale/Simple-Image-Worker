@@ -26,11 +26,20 @@ public class Pixel extends ComplexNumber {
 		else setColor(color);
 	}
 	
-	public void setColor(int color) {
+	public void setColor(double color) {
 		this.setReal(color);
 		this.setImaginary(0);
 	}
+	
+	public void setColor(int color) {
+		this.setColor((double) color);
+	}
 
+	/*public void setColor (int r, int g, int b) {
+		this.setReal(new Color(r, g, b).getRGB());
+		this.setImaginary(0);
+	}*/
+	
 	public int getColor   () { return (int) abs(); }
 
 	public void add(int color) { this.setAbsoluteColor(this.getColor() + color); }
