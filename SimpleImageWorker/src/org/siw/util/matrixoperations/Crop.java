@@ -1,13 +1,6 @@
 package org.siw.util.matrixoperations;
 
-import java.io.File;
-
-import org.siw.containers.ImageContainer;
-import org.siw.containers.PGM;
-import org.siw.image.Image;
-import org.siw.image.Pixel;
-
-public class Crop extends MatrixOperations {
+public class Crop implements MatrixOperations {
 
 	private int x;
 	private int y;
@@ -33,25 +26,24 @@ public class Crop extends MatrixOperations {
 		return crop;
 	}
 
-	@Override
-	public Pixel[][] execute(Pixel[][] matrix) {
-		Pixel[][] crop = new Pixel[height][width];
-		
-		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++)
-				crop[y][x] = new Pixel(matrix[y + this.y][x + this.x]);
-		
-		return crop;
-	}
-
 	public static void main (String[] args) throws Exception {
-		ImageContainer cont = new PGM(); 
-		Image lena = cont.load(new File("testes/lena.big.pgm"));
+		double[][] matrix = new double[][] {
+				{1, 2, 3, 4, 5, 6},
+				{1, 2, 3, 4, 5, 6},
+				{1, 2, 3, 4, 5, 6},
+				{1, 2, 3, 4, 5, 6},
+				{1, 2, 3, 4, 5, 6},
+				{1, 2, 3, 4, 5, 6}
+		}; 
 		
-		MatrixOperations op = new Crop(200, 200, 200, 200);
-		Pixel[][] data = op.execute(lena.getData());
-		lena.setData(data);
+		MatrixOperations op = new Crop(1, 1, 4, 4);
+		matrix = op.execute(matrix);
 		
-		cont.save(new File("testes_out/teste.pgm"), lena);
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++){
+				System.out.print(matrix[i][j] + " ");
+			}
+			System.out.println();
+		}
 	}
 }

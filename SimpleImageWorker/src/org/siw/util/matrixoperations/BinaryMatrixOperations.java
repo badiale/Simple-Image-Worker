@@ -1,8 +1,9 @@
 package org.siw.util.matrixoperations;
 
-import org.siw.image.Pixel;
+import org.siw.util.ComplexNumber;
 
-public abstract class BinaryMatrixOperations {
-	public abstract double[][] execute(double[][] a, double[][] b);
-	public abstract Pixel[][] execute(Pixel[][] a, Pixel[][] b);
+
+public interface BinaryMatrixOperations {
+	public double[][] execute(double[][] a, double[][] b);
+	public ComplexNumber[][] execute(ComplexNumber[][] a, ComplexNumber[][] b);
 }

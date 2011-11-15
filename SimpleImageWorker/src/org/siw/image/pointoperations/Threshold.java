@@ -1,12 +1,13 @@
 package org.siw.image.pointoperations;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 
-import org.siw.containers.ImageContainer;
-import org.siw.containers.PGM;
-import org.siw.image.Image;
+import javax.imageio.ImageIO;
 
-public class Threshold extends PointOperation {
+import org.siw.util.ColorUtils;
+
+public class Threshold implements PointOperation {
 	private int threshold;
 	
 	public Threshold (int threshold) {
@@ -15,22 +16,28 @@ public class Threshold extends PointOperation {
 	}
 	
 	@Override
-	public void execute(Image img) {
+	public void execute(BufferedImage img) {
 		for (int y = 0; y < img.getHeight(); y++) {
 			for (int x = 0; x < img.getWidth(); x++) {
-				if (img.getPixel(x, y).getColor() > threshold) img.getPixel(x, y).setColor(255);
-				else img.getPixel(x, y).setColor(0);
+				int[] colors = ColorUtils.toArray(img.getRGB(x, y));
+				
+				for (int i = 0 ; i < colors.length; i++) 
+					if(colors[i] > threshold) 
+						colors[i] = 255;
+					else 
+						colors[i] = 0;
+				
+				img.setRGB(x, y, ColorUtils.toInteger(colors));
 			}
 		}
 	}
 
 	public static void main (String[] args) throws Exception {
-		ImageContainer cont = new PGM(); 
-		Image lena = cont.load(new File("testes/lena.big.pgm"));
+		BufferedImage lena = ImageIO.read(new File("testes/lena.big.png"));
 		
-		PointOperation op = new Threshold(125);
+		PointOperation op = new Threshold(175);
 		op.execute(lena);
 		
-		cont.save(new File("testes_out/teste.pgm"), lena);
+		ImageIO.write(lena, "png", new File("testes_out/teste.png"));
 	}
 }

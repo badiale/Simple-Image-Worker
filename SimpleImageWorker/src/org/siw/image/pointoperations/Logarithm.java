@@ -1,12 +1,13 @@
 package org.siw.image.pointoperations;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 
-import org.siw.containers.ImageContainer;
-import org.siw.containers.PGM;
-import org.siw.image.Image;
+import javax.imageio.ImageIO;
 
-public class Logarithm extends PointOperation {
+import org.siw.util.ColorUtils;
+
+public class Logarithm implements PointOperation {
 	private double c;
 	private boolean cWasGiven;
 	
@@ -23,22 +24,27 @@ public class Logarithm extends PointOperation {
 	}
 
 	@Override
-	public void execute(Image img) {
+	public void execute(BufferedImage img) {
 		if (!cWasGiven)
 			c = 255 / (Math.log(255)); 
 		
 		for (int y = 0; y < img.getHeight(); y++)
-			for (int x = 0; x < img.getWidth(); x++)
-				img.getPixel(x, y).setColor(c * Math.log(1 + img.getPixel(x, y).getColor()));
+			for (int x = 0; x < img.getWidth(); x++) {
+				int[] colors = ColorUtils.toArray(img.getRGB(x, y));
+				
+				for (int i = 0 ; i < colors.length; i++) 
+					colors[i] = (int) (c * Math.log(1 + colors[i]));
+				
+				img.setRGB(x, y, ColorUtils.toInteger(colors));
+			}
 	}
 	
 	public static void main (String[] args) throws Exception {
-		ImageContainer cont = new PGM(); 
-		Image lena = cont.load(new File("testes/fusca.pgm"));
+		BufferedImage fusca = ImageIO.read(new File("testes/fusca.png"));
 		
 		PointOperation op = new Logarithm();
-		op.execute(lena);
+		op.execute(fusca);
 		
-		cont.save(new File("testes_out/teste.pgm"), lena);
+		ImageIO.write(fusca, "png", new File("testes_out/teste.png"));
 	}
 }

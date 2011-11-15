@@ -102,6 +102,12 @@ public class ComplexNumber {
 		return ret;
 	}
 	
+	public static ComplexNumber multiply(ComplexNumber c, double d) {
+		ComplexNumber ret = new ComplexNumber(c);
+		ret.multiply(d);
+		return ret;
+	}
+	
 	public static ComplexNumber exp(ComplexNumber c1) {
 		ComplexNumber ret = new ComplexNumber(c1);
 		ret.exp();

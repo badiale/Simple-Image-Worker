@@ -1,7 +1,7 @@
 package org.siw.image.pointoperations;
 
-import org.siw.image.Image;
+import java.awt.image.BufferedImage;
 
-public abstract class PointOperation {
-	public abstract void execute (Image img);
+public interface PointOperation {
+	public void execute (BufferedImage img);
 }

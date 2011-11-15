@@ -1,13 +1,13 @@
 package org.siw.image.pointoperations;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 
-import org.siw.containers.ImageContainer;
-import org.siw.containers.PGM;
-import org.siw.image.Image;
-import org.siw.image.Pixel;
+import javax.imageio.ImageIO;
 
-public class Brightness extends PointOperation {
+import org.siw.util.ColorUtils;
+
+public class Brightness implements PointOperation {
 	private int offset;
 
 	public Brightness(int offset) {
@@ -15,22 +15,23 @@ public class Brightness extends PointOperation {
 		this.offset = offset;
 	}
 
-	@Override
-	public void execute(Image img) {
+	public void execute (BufferedImage img) {
 		for (int y = 0; y < img.getHeight(); y++)
 			for (int x = 0; x < img.getWidth(); x++) {
-				Pixel pixel = img.getPixel(x, y);
-				pixel.setColor(pixel.getColor() + offset);
+				int[] colors = ColorUtils.toArray(img.getRGB(x, y));
+				
+				for (int i = 0 ; i < colors.length; i++) colors[i] += offset;
+				
+				img.setRGB(x, y, ColorUtils.toInteger(colors));
 			}
 	}
 	
 	public static void main (String[] args) throws Exception {
-		ImageContainer cont = new PGM(); 
-		Image lena = cont.load(new File("testes/lena.pgm"));
+		BufferedImage lena = ImageIO.read(new File("testes/lena.big.png"));
 		
 		PointOperation op = new Brightness(50);
 		op.execute(lena);
 		
-		cont.save(new File("testes_out/teste.pgm"), lena);
+		ImageIO.write(lena, "png", new File("testes_out/teste.png"));
 	}
 }

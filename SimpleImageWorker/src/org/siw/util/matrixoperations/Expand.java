@@ -1,29 +1,35 @@
 package org.siw.util.matrixoperations;
 
-public class Padd implements MatrixOperations {
-	
-	private int size;
-	
-	public Padd(int paddingSize) {
-		super();
-		this.size = paddingSize;
-	}
 
+public class Expand implements MatrixOperations {
+	
+	private int width;
+	private int height;
+	
+	public Expand(int width, int height) {
+		super();
+		this.width = width;
+		this.height = height;
+	}
+	
 	@Override
 	public double[][] execute(double[][] matrix) {
 		int matrixH = matrix.length;
 		int matrixW = matrix[0].length;
 		
-		double[][] padd = new double[matrixH + size*2][matrixW + size*2];
+		double[][] resize = new double[height][width];
 		
 		// copies the original image into the padded area
 		for (int y = 0; y < matrixH; y++)
-			for (int x = 0; x < matrixW; x++)
-				padd[size + y][size + x] = matrix[y][x];
+			for (int x = 0; x < matrixW; x++) {
+				int centerY = (height - matrixH) / 2;
+				int centerX = (width - matrixW) / 2;
+				resize[centerY + y][centerX + x] = matrix[y][x];
+			}
 		
-		return padd;
+		return resize;
 	}
-	
+
 	public static void main (String[] args) throws Exception {
 		double[][] matrix = new double[][] {
 				{1, 2, 3},
@@ -31,7 +37,7 @@ public class Padd implements MatrixOperations {
 				{1, 2, 3}
 		}; 
 		
-		MatrixOperations op = new Padd(3);
+		MatrixOperations op = new Expand(9, 9);
 		matrix = op.execute(matrix);
 		
 		for (int i = 0; i < matrix.length; i++) {

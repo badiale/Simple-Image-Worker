@@ -1,8 +1,9 @@
 package org.siw.util.matrixoperations;
 
-import org.siw.image.Pixel;
+import org.siw.util.ComplexNumber;
 
-public class Convolute extends BinaryMatrixOperations {
+
+public class Convolute implements BinaryMatrixOperations {
 
 	@Override
 	public double[][] execute(double[][] a, double[][] b) {
@@ -21,17 +22,19 @@ public class Convolute extends BinaryMatrixOperations {
 	}
 
 	@Override
-	public Pixel[][] execute(Pixel[][] a, Pixel[][] b) {
+	public ComplexNumber[][] execute(ComplexNumber[][] a, ComplexNumber[][] b) {
 		if (a.length != b.length || a[0].length != b[0].length)
 			throw new RuntimeException("Matrix dimensions must be the same");
 		
 		int height = a.length;
 		int width = a[0].length;
 		
-		Pixel[][] c = new Pixel[height][width];
+		ComplexNumber[][] c = new ComplexNumber[height][width];
 		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++)
-				c[y][x] = (Pixel) Pixel.multiply(a[y][x], b[y][x]);
+			for (int x = 0; x < width; x++) {
+				c[y][x] = new ComplexNumber(a[y][x]);
+				c[y][x].multiply(b[y][x]);
+			}
 		
 		return c;
 	}
