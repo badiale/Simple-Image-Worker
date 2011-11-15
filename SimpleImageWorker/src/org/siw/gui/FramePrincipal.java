@@ -28,11 +28,12 @@ public class FramePrincipal extends JFrame {
 		
 		ImagePanel image = new ImagePanel("testes/lena.big.png");
 		scrollPane.setViewportView(image);
+		
+		pack();
 	}
 	
 	public static void main (String[] args) throws Exception {
 		JFrame principal = new FramePrincipal();
-		principal.pack();
 		principal.setVisible(true);
 	}
 }
