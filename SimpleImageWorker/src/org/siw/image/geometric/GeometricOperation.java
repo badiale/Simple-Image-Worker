@@ -1,4 +1,4 @@
-package org.siw.geometric;
+package org.siw.image.geometric;
 
 import java.awt.image.BufferedImage;
 

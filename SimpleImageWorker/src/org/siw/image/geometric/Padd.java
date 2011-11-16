@@ -1,4 +1,4 @@
-package org.siw.geometric;
+package org.siw.image.geometric;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -7,24 +7,22 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-public class Expand implements GeometricOperation {
-	private int width;
-	private int height;
+public class Padd implements GeometricOperation {
+	private int size;
 	
-	public Expand(int width, int height) {
+	public Padd(int size) {
 		super();
-		this.width = width;
-		this.height = height;
+		this.size = size;
 	}
 
 	@Override
 	public BufferedImage execute(BufferedImage img) {
-		BufferedImage expanded = new BufferedImage(width, height, img.getType());
+		BufferedImage expanded = new BufferedImage(img.getWidth() + size*2, img.getHeight() + size*2, img.getType());
 		Graphics2D g = expanded.createGraphics();
 		
 		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, width, height);
-		g.drawImage(img, (width - img.getWidth())/2, (height - img.getHeight())/2, null);
+		g.fillRect(0, 0, expanded.getWidth(), expanded.getHeight());
+		g.drawImage(img, size, size, null);
 		
 		return expanded;
 	}
@@ -32,7 +30,7 @@ public class Expand implements GeometricOperation {
 	public static void main(String[] args) throws Exception {
 		BufferedImage lena = ImageIO.read(new File("testes/lena.big.png"));
 		
-		GeometricOperation op = new Expand(700, 700);
+		GeometricOperation op = new Padd(20);
 		lena = op.execute(lena);
 		
 		ImageIO.write(lena, "png", new File("testes_out/teste.png"));

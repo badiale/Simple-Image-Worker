@@ -5,8 +5,8 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import org.siw.geometric.GeometricOperation;
-import org.siw.geometric.Padd;
+import org.siw.image.geometric.GeometricOperation;
+import org.siw.image.geometric.Padd;
 import org.siw.util.ColorUtils;
 
 public class Filter {
@@ -91,9 +91,11 @@ public class Filter {
 		BufferedImage lena = ImageIO.read(new File("testes/lena.big.png"));
 		
 		double[][] matrix = {
-				{-1,-1,-1},
-				{-1, 8,-1},
-				{-1,-1,-1}
+				{0, 0, 0, 0, 0},
+				{0,-1,-1,-1, 0},
+				{0,-1, 8,-1, 0},
+				{0,-1,-1,-1, 0},
+				{0, 0, 0, 0, 0}
 		};
 		
 		Filter f = new Filter(matrix);

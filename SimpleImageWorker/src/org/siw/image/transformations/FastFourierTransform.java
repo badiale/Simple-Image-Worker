@@ -5,26 +5,12 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import org.siw.image.filter.ConvolutionFilter;
-import org.siw.image.filter.ConvolutionGaussian;
 import org.siw.util.ColorUtils;
 import org.siw.util.ComplexNumber;
 
 public class FastFourierTransform implements FourierTransform {
 	// realiza a fft recursiva
 	// saiba mais em http://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm#Pseudocode
-	//	X0,...,N−1 ← ditfft2(x, N, s):             DFT of (x0, xs, x2s, ..., x(N-1)s):
-	//    if N = 1 then
-	//        X0 ← x0                                      trivial size-1 DFT base case
-	//    else
-	//        X0,...,N/2−1 ← ditfft2(x, N/2, 2s)             DFT of (x0, x2s, x4s, ...)
-	//        XN/2,...,N−1 ← ditfft2(x+s, N/2, 2s)           DFT of (xs, xs+2s, xs+4s, ...)
-	//        for k = 0 to N/2−1                             combine DFTs of two halves into full DFT:
-	//            t ← Xk
-	//            Xk ← t + exp(−2πi k/N) Xk+N/2
-	//            Xk+N/2 ← t − exp(−2πi k/N) Xk+N/2
-	//        endfor
-	//    endif
 	private ComplexNumber[] fft(ComplexNumber[] x) {
 		int N = x.length;
 		ComplexNumber[] result = new ComplexNumber[N];
@@ -133,11 +119,20 @@ public class FastFourierTransform implements FourierTransform {
 	}
 	
 	@Override
-	public void revert(BufferedImage img, ComplexNumber[][][] entrada) {
+	public void revert(BufferedImage img, ComplexNumber[][][] matrix) {
 		int width = img.getWidth();
 		int height = img.getHeight();
 		
 		ComplexNumber[] array = null;
+		
+		ComplexNumber[][][] entrada = new ComplexNumber[3][height][width];
+		for (int k = 0; k < 3; k++) {
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					entrada[k][y][x] = new ComplexNumber(matrix[k][y][x]);
+				}
+			}
+		}
 		
 		for (int k = 0; k < 3; k++) {
 			// primeiro aplica a ifft nas colunas
@@ -186,7 +181,7 @@ public class FastFourierTransform implements FourierTransform {
 		ComplexNumber[][][] matrix = ft.apply(lena);
 		
 		ConvolutionFilter f = new ConvolutionGaussian(10, lena.getWidth(), lena.getHeight());
-		f.execute(matrix);
+		//f.execute(matrix);
 		
 		ft.revert(lena, matrix);
 		

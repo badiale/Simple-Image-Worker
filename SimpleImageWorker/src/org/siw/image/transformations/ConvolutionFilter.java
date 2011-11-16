@@ -1,4 +1,4 @@
-package org.siw.image.filter;
+package org.siw.image.transformations;
 
 import org.siw.util.ComplexNumber;
 import org.siw.util.matrixoperations.Expand;
