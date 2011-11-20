@@ -12,7 +12,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
 
 import org.siw.image.transformations.ConvolutionFilter;
 import org.siw.image.transformations.ConvolutionGaussian;
@@ -21,6 +20,8 @@ import org.siw.image.transformations.FourierTransform;
 import org.siw.util.ComplexNumber;
 
 public class ComplexFrame extends JFrame {
+	private static final long serialVersionUID = -6548421362146772446L;
+
 	private JMenuBar menubar;
 	
 	private JMenu mnTransformacoes;
@@ -104,6 +105,7 @@ public class ComplexFrame extends JFrame {
 		add(cplxPanel);
 		
 		pack();
+		setLocationRelativeTo(null);
 	}
 
 	protected void mntmDesfazerAction(ActionEvent arg0) {

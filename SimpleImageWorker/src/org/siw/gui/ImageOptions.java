@@ -1,5 +1,11 @@
 package org.siw.gui;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,20 +16,9 @@ import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class ImageOptions extends JDialog {
 	private static final long serialVersionUID = -2592993946849824208L;
@@ -38,7 +33,7 @@ public class ImageOptions extends JDialog {
 
 	public ImageOptions(JFrame pai, String title, HashMap<String, Double> data) {
 		super(pai, title, true);
-
+		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 		
@@ -72,6 +67,8 @@ public class ImageOptions extends JDialog {
 		while (it.hasNext()) {
 			add(it.next());
 		}
+		
+		setLocationRelativeTo(pai);
 	}
 	
 	public void add(String key) {

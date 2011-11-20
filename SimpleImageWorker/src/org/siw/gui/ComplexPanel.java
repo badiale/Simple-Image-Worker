@@ -6,14 +6,13 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import org.siw.image.pointoperations.Exponential;
-import org.siw.image.pointoperations.Logarithm;
-import org.siw.image.pointoperations.PointOperation;
 import org.siw.util.ColorUtils;
 import org.siw.util.ComplexNumber;
 import org.siw.util.matrixoperations.MatrixShift;
 
 public class ComplexPanel extends JPanel {
+	private static final long serialVersionUID = -1019972655365956292L;
+
 	private ComplexNumber[][][] matrix;
 	
 	private int imgType;
