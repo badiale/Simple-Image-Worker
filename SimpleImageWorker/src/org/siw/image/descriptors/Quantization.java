@@ -6,8 +6,6 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import org.siw.image.pointoperations.Logarithm;
-
 public class Quantization {
 
 	public static int[][] get(BufferedImage img) {
