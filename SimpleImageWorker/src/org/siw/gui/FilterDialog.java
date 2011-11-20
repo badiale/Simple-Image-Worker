@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.text.NumberFormatter;
 
 public class FilterDialog extends JDialog {
+	private static final long serialVersionUID = -1533010430347484624L;
+
 	private double[][] matrix;
 	
 	private JPanel panMatrix;
@@ -65,6 +67,7 @@ public class FilterDialog extends JDialog {
 			}
 		});
 		pack();
+		setLocationRelativeTo(pai);
 	}
 	
 

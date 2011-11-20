@@ -181,7 +181,7 @@ public class FastFourierTransform implements FourierTransform {
 		ComplexNumber[][][] matrix = ft.apply(lena);
 		
 		ConvolutionFilter f = new ConvolutionGaussian(10, lena.getWidth(), lena.getHeight());
-		//f.execute(matrix);
+		f.execute(matrix);
 		
 		ft.revert(lena, matrix);
 		

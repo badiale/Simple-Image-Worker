@@ -1,6 +1,13 @@
 package org.siw.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -30,13 +37,6 @@ import org.siw.image.pointoperations.PointOperation;
 import org.siw.image.pointoperations.Threshold;
 import org.siw.image.transformations.FastFourierTransform;
 import org.siw.image.transformations.FourierTransform;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class ImageFrame extends JFrame {
 	private static final long serialVersionUID = -3249878958195244978L;
@@ -75,16 +75,17 @@ public class ImageFrame extends JFrame {
 	private JScrollPane scrollPane;
 	private ImagePanel image;
 	
-	public ImageFrame(String filename) throws Exception{
+	public ImageFrame(String filename) {
 		this(new File(filename));
 	}
 	
-	public ImageFrame(File filename) throws Exception {
-		initComponents(filename);
-		
+	public ImageFrame(File filename) {
 		setTitle("Simple Image Worker - " + filename);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		initComponents(filename);
 		pack();
+		setLocationRelativeTo(null);
 	}
 	
 	public ImageFrame(BufferedImage img) throws Exception {
@@ -99,9 +100,10 @@ public class ImageFrame extends JFrame {
 		setTitle("Simple Image Worker");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		pack();
+		setLocationRelativeTo(null);
 	}
 
-	private void initComponents(File filename) throws Exception {
+	private void initComponents(File filename) {
 		// menu
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -197,13 +199,33 @@ public class ImageFrame extends JFrame {
 		
 		mntmFastFourier.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent arg0) { mntmFastFourierAction(arg0); }});
 		
-		// imagem
-		image = new ImagePanel(filename);
-		
 		// scroll
 		scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		scrollPane.setViewportView(image);
+		
+		// imagem
+		try {
+			image = new ImagePanel(filename);
+			scrollPane.setViewportView(image);
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			for (Component c : this.getComponents())
+				c.setEnabled(false);
+			
+			for (int i = 0; i < menuBar.getMenuCount(); i++) {
+				JMenu menu = menuBar.getMenu(i);
+				menu.setEnabled(false);
+				for (Component c : menu.getMenuComponents())
+					c.setEnabled(false);
+			}
+			
+			mnArquivo.setEnabled(true);
+			mntmCarregar.setEnabled(true);
+			mntmFechar.setEnabled(true);
+			
+			setPreferredSize(new Dimension(500, 500));
+		}
 	}
 	
 	private void mntmCarregarAction(ActionEvent ev) {
@@ -525,7 +547,7 @@ public class ImageFrame extends JFrame {
 		}
 	}
 	
-	public static void main (String[] args) throws Exception {
+	public static void main (String[] args) {
 		JFrame principal = new ImageFrame("testes/lena.big.png");
 		principal.setVisible(true);
 	}
