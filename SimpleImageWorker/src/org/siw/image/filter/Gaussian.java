@@ -11,15 +11,23 @@ public class Gaussian extends Filter {
 		int size = (int) (6 * sigma);
 		if (size % 2 == 0) size++;
 
-		matrix = new double[size][size];
+		createMatrix(size, size, sigma);
+	}
+	
+	public Gaussian (int width, int height, double sigma) {
+		createMatrix(width, height, sigma);
+	}
+	
+	private void createMatrix (int width, int height, double sigma) {
+		matrix = new double[height][width];
 		
 		double sqrSigma = 2 * sigma*sigma;
 		
 		double sum = 0.0;
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				int x = (-size/2)+j;
-				int y = (-size/2)+i;
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				int x = (-width/2)+j;
+				int y = (-height/2)+i;
 				matrix[i][j] = Math.exp(-((x*x) + (y*y)) / (sqrSigma));
 				
 				sum += matrix[i][j];
@@ -27,8 +35,8 @@ public class Gaussian extends Filter {
 		}
 		
 		// normaliza o filtro
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
 				matrix[i][j] /= sum;
 			}
 		}

@@ -2,38 +2,43 @@ package org.siw.util.matrixoperations;
 
 import org.siw.util.ComplexNumber;
 
-
-public class Convolute implements BinaryMatrixOperations {
-
+public class Multiply implements BinaryMatrixOperations {
+	
 	@Override
 	public double[][] execute(double[][] a, double[][] b) {
-		if (a.length != b.length || a[0].length != b[0].length)
-			throw new RuntimeException("Matrix dimensions must be the same");
-		
+		if (b.length != a[0].length) throw new RuntimeException("Impossivel multiplicar as matrizes.");
+			
 		int height = a.length;
-		int width = a[0].length;
+		int width = b[0].length;
 		
 		double[][] c = new double[height][width];
-		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++)
-				c[y][x] = a[y][x] * b[y][x];
+		
+		for (int i = 0; i < height; i++)
+			for (int j = 0; j < width; j++) {
+				double sum = 0;
+				for (int k = 0; k < b.length; k++) 
+					sum += a[i][k] * b[k][j];
+				c[i][j] = sum;
+			}
 		
 		return c;
 	}
-
+	
 	@Override
 	public ComplexNumber[][] execute(ComplexNumber[][] a, ComplexNumber[][] b) {
-		if (a.length != b.length || a[0].length != b[0].length)
-			throw new RuntimeException("Matrix dimensions must be the same");
+		if (b.length != a[0].length) throw new RuntimeException("Impossivel multiplicar as matrizes.");
 		
 		int height = a.length;
-		int width = a[0].length;
+		int width = b[0].length;
 		
 		ComplexNumber[][] c = new ComplexNumber[height][width];
-		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++) {
-				c[y][x] = new ComplexNumber(a[y][x]);
-				c[y][x].multiply(b[y][x]);
+		
+		for (int i = 0; i < height; i++)
+			for (int j = 0; j < width; j++) {
+				ComplexNumber sum = new ComplexNumber();
+				for (int k = 0; k < b.length; k++) 
+					sum.add(ComplexNumber.multiply(a[i][k], b[k][j]));
+				c[i][j] = sum;
 			}
 		
 		return c;
@@ -67,24 +72,31 @@ public class Convolute implements BinaryMatrixOperations {
 		return c;
 	}
 	
-	public static void main (String[] args) {
-		double[][] a = new double[2][2];
-		double[][] b = new double[2][2];
+	public static void main(String[] args) {
+		double[][] a = new double[][] {
+				{14, 9, 3},
+				{2, 11, 15},
+				{0, 12, 17},
+				{5, 2, 3}
+		};
+		double[][] b = new double[][] {
+				{12, 25},
+				{9, 10},
+				{8, 5}
+		};
 		
-		for (int y = 0; y < 2; y++)
-			for (int x = 0; x < 2; x++) {
-				a[y][x] = x + y;
-				b[y][x] = 3;
-			}
-		
-		BinaryMatrixOperations op = new Convolute();
+		BinaryMatrixOperations op = new Multiply();
 		double[][] c = op.execute(a, b);
 		
-		for (int y = 0; y < 2; y++) {
-			for (int x = 0; x < 2; x++) {
-				System.out.print(c[y][x] + " ");
+		int height = c.length;
+		int width = c[0].length;
+		
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				System.out.print(c[i][j] + " ");
 			}
 			System.out.println();
 		}
 	}
+
 }

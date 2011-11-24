@@ -3,7 +3,7 @@ package org.siw.util.matrixoperations;
 import org.siw.util.ComplexNumber;
 
 
-public class Convolute implements BinaryMatrixOperations {
+public class Sum implements BinaryMatrixOperations {
 
 	@Override
 	public double[][] execute(double[][] a, double[][] b) {
@@ -16,7 +16,7 @@ public class Convolute implements BinaryMatrixOperations {
 		double[][] c = new double[height][width];
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
-				c[y][x] = a[y][x] * b[y][x];
+				c[y][x] = a[y][x] + b[y][x];
 		
 		return c;
 	}
@@ -33,25 +33,24 @@ public class Convolute implements BinaryMatrixOperations {
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++) {
 				c[y][x] = new ComplexNumber(a[y][x]);
-				c[y][x].multiply(b[y][x]);
+				c[y][x].add(b[y][x]);
 			}
 		
 		return c;
 	}
-	
 	@Override
-	public double[][] execute (double[][] a, double scalar) {
+	public double[][] execute(double[][] a, double scalar) {
 		int height = a.length;
 		int width = a[0].length;
 		
 		double[][] c = new double[height][width];
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
-				c[y][x] = a[y][x] * scalar;
+				c[y][x] = a[y][x] + scalar;
 		
 		return c;
 	}
-	
+
 	@Override
 	public ComplexNumber[][] execute(ComplexNumber[][] a, double scalar) {
 		int height = a.length;
@@ -61,7 +60,7 @@ public class Convolute implements BinaryMatrixOperations {
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++) {
 				c[y][x] = new ComplexNumber(a[y][x]);
-				c[y][x].multiply(scalar);
+				c[y][x].add(new ComplexNumber(scalar, 0));
 			}
 		
 		return c;
@@ -77,7 +76,7 @@ public class Convolute implements BinaryMatrixOperations {
 				b[y][x] = 3;
 			}
 		
-		BinaryMatrixOperations op = new Convolute();
+		BinaryMatrixOperations op = new Sum();
 		double[][] c = op.execute(a, b);
 		
 		for (int y = 0; y < 2; y++) {

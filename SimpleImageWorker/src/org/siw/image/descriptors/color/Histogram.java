@@ -1,4 +1,4 @@
-package org.siw.image.descriptors;
+package org.siw.image.descriptors.color;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
