@@ -31,7 +31,6 @@ public class LaplaceOfGaussian extends Filter {
 	public static void main(String[] args) throws Exception {
 		BufferedImage lena = ImageIO.read(new File("testes/lena.big.png"));
 		
-		// FIXME
 		Filter f = new LaplaceOfGaussian(1.4);
 		f.execute(lena);
 		

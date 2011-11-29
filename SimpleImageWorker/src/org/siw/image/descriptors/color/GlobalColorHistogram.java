@@ -26,13 +26,19 @@ public class GlobalColorHistogram implements Descriptor {
 		return ret;
 	}
 
+        @Override
+        public double[] execute(BufferedImage img) {
+            return execute(Quantization.get(img));
+        }
+        
 	public static void main(String[] args) throws Exception {
-		BufferedImage img = ImageIO.read(new File("testes/lena.big.png"));
+		BufferedImage img = ImageIO.read(new File("testes/link.png"));
 		
 		Descriptor descriptor = new GlobalColorHistogram();
 		double [] colorHistogram = descriptor.execute(Quantization.get(img));
 		
 		for (double color : colorHistogram)
 			System.out.print(color + " ");
+                System.out.println();
 	}
 }

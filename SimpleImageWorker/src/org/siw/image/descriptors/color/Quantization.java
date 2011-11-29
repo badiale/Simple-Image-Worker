@@ -24,7 +24,7 @@ public class Quantization {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		BufferedImage img = ImageIO.read(new File("testes/lena.big.png"));
+		BufferedImage img = ImageIO.read(new File("testes/link.png"));
 		
 		int [][] quantization = Quantization.get(img);
 		
